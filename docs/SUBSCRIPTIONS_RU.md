@@ -59,28 +59,21 @@ User-Agent может выбирать формат подписки, но не 
 или сетевой маршрутизации. Sidecar слушает только loopback, проверяет Host и
 разрешённые пути, не печатает тело подписки и открывает SQLite только read-only.
 
-Для выбранного клиента Throne 1.2.4 дополнительно проверены исходники точного
-тега. Его URI importer отправляет VMess/Trojan XHTTP в ядро без такого транспорта;
-VMess gRPC в v2rayN JSON теряет service name, хотя URI-форма его поддерживает.
-Sidecar преобразует только распознанную простую форму LucX в такой URI:
-`grpc`, `type=none`, TLS/h2, пустые authority/host и дополнительные TLS-параметры.
-MultiMode, неизвестные поля, сложный TLS и повреждённые формы остаются исходными;
-это не подтверждает их совместимость. Другие User-Agent это преобразование
-не получают. Общий выбор формата по слову Throne сохранён, но исследован именно
-код версии 1.2.4; импорт и соединение release asset ещё требуют проверки.
+## Совместимость с Throne
 
-Официальный `Throne-1.2.4-windows64.zip` проверен по опубликованному GitHub
-SHA-256 `89d32f3a557849641b466d3c2f0ac69dfc02ec8309a129289290e8fcca4b7b32`.
-В архиве присутствует libcronet.dll, а buildinfo ThroneCore содержит
-`with_naive_outbound`. Зафиксированы также replacements модулей: встроенный
-Xray использует fork Throne с commit `735fffaa66af`. Проверка состава архива
-не подтверждает импорт URI или соединение; программа ещё не запускалась.
-Источник: [официальный релиз Throne 1.2.4](https://github.com/throneproj/Throne/releases/tag/1.2.4).
-Legacy Windows build не включает Naive. TT importer не читает `client_random_prefix`,
-поэтому маршрут, требующий этот префикс, нельзя объявлять совместимым без другого
-проверенного backend-контракта. Испытания Xray не заменяют приёмку самого клиента.
-Основание: [код Throne 1.2.4](https://github.com/throneproj/Throne/tree/33777e27b77cb62ef8c98a47d8ea4601de0c1983)
-и закреплённые в нём версии ядер; запуск release asset ещё требуется.
+В Throne 1.2.4 импорт VMess/Trojan XHTTP через URI не сохраняет этот транспорт,
+а импорт VMess gRPC через v2rayN JSON теряет service name. Для простого профиля
+VMess gRPC sidecar формирует URI: `grpc`, `type=none`, TLS/h2, без дополнительных
+параметров authority/host и TLS. Такое преобразование применяется к User-Agent
+Throne. MultiMode, неизвестные поля и сложные TLS-профили передаются без изменения;
+их совместимость нужно проверить в клиенте после импорта.
+
+Стандартная Windows-сборка Throne 1.2.4 включает поддержку Naive; Legacy-сборка
+её не содержит. Импорт TrustTunnel не читает `client_random_prefix`, поэтому
+профиль, требующий этот параметр, с таким импортом несовместим.
+
+Ссылки: [релиз Throne 1.2.4](https://github.com/throneproj/Throne/releases/tag/1.2.4)
+и [исходный код клиента](https://github.com/throneproj/Throne/tree/33777e27b77cb62ef8c98a47d8ea4601de0c1983).
 
 ## Негативные проверки
 
