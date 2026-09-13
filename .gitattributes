@@ -1,0 +1,7 @@
+# Сохранять байты исходников и детерминированного installer.
+src/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tests/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+tools/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.sh -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+dist/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+*.md text eol=lf

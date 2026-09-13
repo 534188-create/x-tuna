@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "x-tuna"
+version = "2.0.7"
+description = "Транзакционный постконфигуратор панели LucX"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [{ name = "tuna" }]
+
+[project.scripts]
+x-tuna = "lucx_post_configurator.cli:main"
+lucx-post-configure = "lucx_post_configurator.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+lucx_post_configurator = ["assets/*"]
