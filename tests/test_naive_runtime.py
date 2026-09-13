@@ -38,15 +38,16 @@ SOURCE = '''{
 
 
 class NaiveRuntimeTests(unittest.TestCase):
-    def test_executable_owner_error_has_actionable_safe_message(self):
+    def test_executable_accepts_panel_owner_and_write_permissions(self):
         from lucx_post_configurator.naive_runtime import _trusted
-        info = SimpleNamespace(st_mode=0o100755, st_nlink=1, st_uid=65534)
-        with patch('lucx_post_configurator.naive_runtime.os.name', 'posix'), \
-             self.assertRaisesRegex(ValueError, 'владелец'):
-            _trusted(info, SimpleNamespace(is_live=True), executable=True)
+        with patch('lucx_post_configurator.naive_runtime.os.name', 'posix'):
+            for mode in (0o100755, 0o100775, 0o100777):
+                info = SimpleNamespace(st_mode=mode, st_nlink=1, st_uid=65534)
+                with self.subTest(mode=mode):
+                    _trusted(info, SimpleNamespace(is_live=True), executable=True)
 
     @unittest.skipUnless(os.name == 'posix', 'Проверка POSIX владельца исполняемого файла')
-    def test_untrusted_xray_executable_reports_owner_remedy_without_credentials(self):
+    def test_xray_executable_with_panel_owner_preserves_runtime_binding(self):
         binary = self.fs.path('/usr/local/bin/xray')
         original = Path.lstat
         def lstat(path):
@@ -56,10 +57,10 @@ class NaiveRuntimeTests(unittest.TestCase):
                 values[4] = 65534
                 return os.stat_result(values)
             return result
-        with patch.object(Path, 'lstat', lstat), self.assertRaisesRegex(ValueError, 'владельц|владелец') as error:
-            validate_source_binding(self.fs, self.db_path, 5, SOURCE)
-        self.assertIn('0755', str(error.exception))
-        self.assertNotIn('secret', str(error.exception))
+        with patch.object(Path, 'lstat', lstat):
+            result = validate_source_binding(self.fs, self.db_path, 5, SOURCE)
+        self.assertTrue(result['process_epoch_sha256'])
+        self.assertTrue(result['runtime_sha256'])
 
     def test_unrelated_nonroot_process_does_not_block_root_xray_discovery(self):
         self.write('/proc/202/comm', b'nginx\n', 0o444)

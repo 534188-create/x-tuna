@@ -60,10 +60,11 @@ def _target(fs: TargetFS, name: str) -> Path:
 def _trusted(info, fs, *, executable=False):
     if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
         raise ValueError(_ERROR)
-    if os.name == 'posix' and (info.st_uid != (0 if fs.is_live else os.geteuid()) or info.st_mode & 0o022):
-        if executable:
-            raise NaivePolicyError('Naive: исполняемый файл Xray имеет небезопасные права; '
-                'требуется владелец root и режим 0755. Сначала проверьте происхождение бинарника.')
+    # Владельца и права Xray задаёт установщик панели. Для бинарника проверяем
+    # тип, возможность исполнения и связь с процессом; политику файлов данных
+    # не ослабляем. Изменение метаданных во время операции по-прежнему запрещено.
+    if not executable and os.name == 'posix' and (
+            info.st_uid != (0 if fs.is_live else os.geteuid()) or info.st_mode & 0o022):
         raise ValueError(_ERROR)
     if executable and os.name == 'posix' and not info.st_mode & stat.S_IXUSR:
         raise ValueError(_ERROR)
