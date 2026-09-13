@@ -25,8 +25,8 @@ command -v curl >/dev/null || { echo "Установите curl: apt-get update 
 tmp=$(mktemp -d)
 cleanup() { rm -f -- "$tmp/lucx-post-configure.sh"; rmdir -- "$tmp"; }
 trap cleanup EXIT
-curl --fail --location --proto "=https" --tlsv1.2 --retry 2 --connect-timeout 15 --max-time 180 "https://raw.githubusercontent.com/534188-create/x-tuna/6022e5531459c33a2ae2d222bd3c8054d8185cf7/dist/lucx-post-configure.sh" -o "$tmp/lucx-post-configure.sh"
-printf "%s  %s\n" "0f8386ea45c0ea30feea0b051d3299283579332a9246b0b05d7c85fc16461322" "$tmp/lucx-post-configure.sh" | sha256sum -c -
+curl --fail --location --proto "=https" --tlsv1.2 --retry 2 --connect-timeout 15 --max-time 180 "https://raw.githubusercontent.com/534188-create/x-tuna/da58cd255f451ef920a992d5c1b13e777c487dd4/dist/lucx-post-configure.sh" -o "$tmp/lucx-post-configure.sh"
+printf "%s  %s\n" "dfc5491fd408503555b213372cb4804504fcb1e24eaab72ccf39cc56ffcdcb2c" "$tmp/lucx-post-configure.sh" | sha256sum -c -
 sh "$tmp/lucx-post-configure.sh" --install-tui --yes
 echo "Установка завершена. Откройте меню командой: x-tuna"
 '
@@ -45,8 +45,8 @@ command -v curl >/dev/null || { echo "Установите curl: apt-get update 
 tmp=$(mktemp -d)
 cleanup() { rm -f -- "$tmp/lucx-post-configure.sh"; rmdir -- "$tmp"; }
 trap cleanup EXIT
-curl --fail --location --proto "=https" --tlsv1.2 --retry 2 --connect-timeout 15 --max-time 180 "https://gh-proxy.com/https://raw.githubusercontent.com/534188-create/x-tuna/6022e5531459c33a2ae2d222bd3c8054d8185cf7/dist/lucx-post-configure.sh" -o "$tmp/lucx-post-configure.sh"
-printf "%s  %s\n" "0f8386ea45c0ea30feea0b051d3299283579332a9246b0b05d7c85fc16461322" "$tmp/lucx-post-configure.sh" | sha256sum -c -
+curl --fail --location --proto "=https" --tlsv1.2 --retry 2 --connect-timeout 15 --max-time 180 "https://gh-proxy.com/https://raw.githubusercontent.com/534188-create/x-tuna/da58cd255f451ef920a992d5c1b13e777c487dd4/dist/lucx-post-configure.sh" -o "$tmp/lucx-post-configure.sh"
+printf "%s  %s\n" "dfc5491fd408503555b213372cb4804504fcb1e24eaab72ccf39cc56ffcdcb2c" "$tmp/lucx-post-configure.sh" | sha256sum -c -
 sh "$tmp/lucx-post-configure.sh" --install-tui --yes
 echo "Установка завершена. Откройте меню командой: x-tuna"
 '
